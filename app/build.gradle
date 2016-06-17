@@ -1,0 +1,78 @@
+import groovy.inspect.swingui.ObjectBrowser
+
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.3"
+
+    defaultConfig {
+        applicationId "com.example.msims.flavordimensiontest"
+        minSdkVersion 15
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    flavorDimensions "iceCreamFlavor", "topping", "garnish"
+
+    productFlavors {
+        vanilla {
+            dimension "iceCreamFlavor"
+        }
+        chocolate {
+            dimension "iceCreamFlavor"
+        }
+        caramel {
+            dimension "topping"
+        }
+        fudge {
+            dimension "topping"
+        }
+        almonds {
+            dimension "garnish"
+        }
+        cherries {
+            dimension "garnish"
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    //noinspection GradleDependency
+    compile 'com.android.support:appcompat-v7:23.4.0'
+    //noinspection GradleDependency
+    compile 'com.android.support:design:23.4.0'
+}
+
+// Debug print stuff... this executes during the config phase so just invoking ./gradlew by itself will trigger it
+
+android.variantFilter { variant ->
+    def name = variant.getFlavors().collect({ it.name }).join('-') + '-' + variant.buildType.name
+    println "[android.variantFilter] Variant name is " + name
+}
+
+gradle.projectsEvaluated {
+    android.applicationVariants.each { variant ->
+        def resFolders = []
+        variant.sourceSets.each { sourceSet ->
+            sourceSet.res.each { res ->
+                resFolders << res
+            }
+        }
+        println "[gradle.projectsEvaluated][android.applicationVariants.each] Variant name ${variant.name} has res folders: ${resFolders}"
+    }
+
+    android.sourceSets.each {
+        //ObjectBrowser.inspect(it)
+        println "[gradle.projectsEvaluated][android.sourceSets.each] name: " + it.name + " res dirs: " + it.res.srcDirs
+    }
+}

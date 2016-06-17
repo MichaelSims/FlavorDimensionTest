@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Flavor Dimension Test</string>
+    <string name="action_settings">Settings</string>
+    <string name="defined_in_main">defined_in_main</string>
+</resources>
